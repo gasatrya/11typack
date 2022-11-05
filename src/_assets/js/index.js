@@ -1,1 +1,1 @@
-console.log('success!')
+const cookie = require('vanilla-cookieconsent')

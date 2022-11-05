@@ -1,14 +1,16 @@
 const pluginNavigation = require('@11ty/eleventy-navigation')
-const pluginPurgeCss = require('eleventy-plugin-purgecss')
+const pluginRss = require('@11ty/eleventy-plugin-rss')
+const pluginSyntaxHighlight = require('@11ty/eleventy-plugin-syntaxhighlight')
 const filters = require('./utils/filters')
 const transforms = require('./utils/transforms')
+const shortcodes = require('./utils/shortcodes')
 
 module.exports = function (eleventyConfig) {
   // Watch this folder
   eleventyConfig.addWatchTarget('./src/_assets')
 
   // Delay, wait for webpack rebuild
-  eleventyConfig.setWatchThrottleWaitTime(100)
+  eleventyConfig.setWatchThrottleWaitTime(150)
 
   // Layouts
   eleventyConfig.addLayoutAlias('base', 'base.njk')
@@ -16,22 +18,25 @@ module.exports = function (eleventyConfig) {
   // Pass-through files.
   eleventyConfig.setServerPassthroughCopyBehavior('copy')
   eleventyConfig.addPassthroughCopy({ './src/_assets/public': 'public' })
-  eleventyConfig.addPassthroughCopy({ './src/_assets/fonts': 'fonts' })
 
   // Plugins.
   eleventyConfig.addPlugin(pluginNavigation)
-  if (process.env.ELEVENTY_ENV === 'production') {
-    eleventyConfig.addPlugin(pluginPurgeCss)
-  }
+  eleventyConfig.addPlugin(pluginRss)
+  eleventyConfig.addPlugin(pluginSyntaxHighlight)
 
   // Filters
   Object.keys(filters).forEach(name => {
     eleventyConfig.addFilter(name, filters[name])
   })
 
-  // Filters
+  // Transforms
   Object.keys(transforms).forEach(name => {
     eleventyConfig.addTransform(name, transforms[name])
+  })
+
+  // Shortcodes
+  Object.keys(shortcodes).forEach(name => {
+    eleventyConfig.addNunjucksAsyncShortcode(name, shortcodes[name])
   })
 
   // Eleventy config

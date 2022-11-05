@@ -2,7 +2,7 @@ const { DateTime } = require('luxon')
 
 module.exports = {
   readableDate: dateObj => {
-    return DateTime.fromJSDate(dateObj, { zone: 'utc' }).setLocale('id').toFormat('dd LLLL yyyy')
+    return DateTime.fromJSDate(dateObj, { zone: 'utc' }).setLocale('en').toFormat('dd LLLL yyyy')
   },
 
   dateToISO: dateObj => {
